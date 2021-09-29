@@ -4,7 +4,8 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
-  res.send('respond with a resource');
+  throw new Error('New error');
+  res.json({ data: 'My users route' });
 });
 
 module.exports = router;

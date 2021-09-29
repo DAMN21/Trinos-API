@@ -4,7 +4,8 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Express' });
+  console.log('index', req.query);
+  res.json({ data: 'Hello World' });
 });
 
 module.exports = router;
