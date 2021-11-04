@@ -1,27 +1,28 @@
 const express = require('express');
-const logger = require('morgan');
 
-const indexRouter = require('./src/routes/index');
+const ErrorSerializer = require('./src/serializers/BaseSerializer');
 const usersRouter = require('./src/routes/users');
-const ErrorSerializer = require('./src/serializers/ErrorSerializer');
 
 const app = express();
 
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 app.use((req, res, next) => {
   res.status(404);
-  res.json(new ErrorSerializer(404, 'Not found'));
+  res.json(new ErrorSerializer('Not found', null));
 });
 
 app.use((err, req, res, next) => {
-  res.status(500);
-  res.json(new ErrorSerializer(500, err.message));
+  const {
+    statusCode = 500,
+    message,
+  } = err;
+
+  res.status(statusCode);
+  res.json(new ErrorSerializer(message, null));
 });
 
 module.exports = app;
