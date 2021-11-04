@@ -1,15 +1,13 @@
 class BaseSerializer {
-  constructor(status, data, err) {
+  constructor(status, data) {
     this.status = status;
     this.data = data;
-    this.err = err;
   }
 
   toJSON() {
     return {
       status: this.status,
       data: this.data,
-      err: this.err,
     };
   }
 }

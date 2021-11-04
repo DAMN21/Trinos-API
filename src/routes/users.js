@@ -2,9 +2,14 @@ const express = require('express');
 
 const router = express.Router();
 
-/* GET users listing. */
-router.get('/', (req, res, next) => {
-  res.json({ data: 'hello world-users' });
-});
+const UsersController = require('../controllers/users');
+
+router.get('/:id', UsersController.getUserById);
+
+router.post('/', UsersController.createUser);
+
+router.put('/:id', UsersController.updateUser);
+
+router.delete('/:id', UsersController.deactivateUser);
 
 module.exports = router;
