@@ -4,9 +4,7 @@
  * Module dependencies.
  */
 
-const debug = require('debug')('trinos-api:server');
 const http = require('http');
-
 const app = require('../app');
 
 /**
@@ -14,16 +12,16 @@ const app = require('../app');
   */
 
 function normalizePort(val) {
-  const port = parseInt(val, 10);
+  const portParsed = parseInt(val, 10);
 
-  if (Number.isNaN(port)) {
+  if (Number.isNaN(portParsed)) {
     // named pipe
     return val;
   }
 
-  if (port >= 0) {
+  if (portParsed >= 0) {
     // port number
-    return port;
+    return portParsed;
   }
 
   return false;
@@ -79,7 +77,7 @@ function onListening() {
   const bind = typeof addr === 'string'
     ? `pipe ${addr}`
     : `port ${addr.port}`;
-  debug(`Listening on ${bind}`);
+  console.log(`Listening on ${bind}`);
 }
 
 /**

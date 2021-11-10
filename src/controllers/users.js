@@ -33,7 +33,6 @@ const createUser = async (req, res, next) => {
       password: body.password,
     });
 
-    user.active = undefined;
     res.json(new UserSerializer(user));
   } catch (err) {
     next(err);
@@ -89,7 +88,7 @@ const deactivateUser = async (req, res, next) => {
       throw new ApiError(myError, myErrorCode);
     }
 
-    user.active = true;
+    user.active = false;
     User.update({ where: { id: params.id } }, user);
     res.json({ status: 'success', data: null });
   } catch (err) {
