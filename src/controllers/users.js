@@ -1,7 +1,18 @@
 const ApiError = require('../utils/ApiError');
 
-const User = require('../models/user');
+const { User } = require('../database/models');
 const UserSerializer = require('../serializers/UserSerializer');
+
+const findUser = async (where) => {
+  Object.assign(where, { active: true });
+
+  const user = await User.findOne({ where });
+  if (!user) {
+    throw new ApiError('User not found', 400);
+  }
+
+  return user;
+};
 
 const createUser = async (req, res, next) => {
   try {
@@ -46,7 +57,7 @@ const updateUser = async (req, res, next) => {
   try {
     const { body } = req;
     const { params } = req;
-    const user = await User.findOne({ where: { id: params.id } });
+    const user = await findUser({ id: params.id });
 
     const keysFieldsUser = ['name', 'username', 'email'];
     const keysFieldsBody = Object.keys(body);
@@ -67,8 +78,11 @@ const updateUser = async (req, res, next) => {
       throw new ApiError(myError, myErrorCode);
     }
 
-    const userUpdated = await User.update({ where: { id: params.id } }, body);
-    res.json(new UserSerializer(userUpdated));
+    Object.assign(user, body);
+
+    await user.save();
+
+    res.json(new UserSerializer(user));
   } catch (err) {
     next(err);
   }
@@ -80,7 +94,7 @@ const deactivateUser = async (req, res, next) => {
 
   try {
     const { params } = req;
-    const user = await User.findOne({ where: { id: params.id } });
+    const user = await findUser({ id: params.id });
 
     if (!user || user.active === false) {
       myError = 'User not found';
@@ -88,9 +102,10 @@ const deactivateUser = async (req, res, next) => {
       throw new ApiError(myError, myErrorCode);
     }
 
-    user.active = false;
-    User.update({ where: { id: params.id } }, user);
-    res.json({ status: 'success', data: null });
+    Object.assign(user, { active: false });
+
+    await user.save();
+    res.json(new UserSerializer(null));
   } catch (err) {
     next(err);
   }
@@ -102,7 +117,7 @@ const getUserById = async (req, res, next) => {
     let myError = '';
     let myErrorCode = '';
 
-    const user = await User.findOne({ where: { id: params.id } });
+    const user = await findUser({ id: params.id });
 
     if (!user || user.active === false) {
       myError = 'User not found';
@@ -112,8 +127,6 @@ const getUserById = async (req, res, next) => {
     if (myError !== '') {
       throw new ApiError(myError, myErrorCode);
     }
-
-    user.active = undefined;
 
     res.json(new UserSerializer(user));
   } catch (err) {

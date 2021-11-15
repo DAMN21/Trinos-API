@@ -4,17 +4,25 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "db:migrate": "cd ./src/database && sequelize db:migrate",
+    "db:migration:generate": "cd ./src/database && sequelize migration:generate",
+    "db:model:generate": "cd ./src/database && sequelize model:generate"
   },
   "dependencies": {
     "debug": "~2.6.9",
     "express": "^4.16.4",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.9.0",
+    "sqlite3": "^5.0.2"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.2",
-    "nodemon": "^2.0.13"
+    "nodemon": "^2.0.13",
+    "sequelize-cli": "^6.3.0"
   }
 }
