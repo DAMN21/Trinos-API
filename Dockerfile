@@ -1,6 +1,11 @@
-FROM node:17.1
+FROM node:fermium-alpine
 
-WORKDIR /app
+WORKDIR /usr/src/app
+
+EXPOSE 3000
+
+RUN apk add --update python make g++\
+  && rm -rf /var/cache/apk/*
 
 COPY ./package*.json ./
 
