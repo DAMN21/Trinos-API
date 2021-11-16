@@ -10,3 +10,5 @@ https://documenter.getpostman.com/view/18044556/UVC9g53z
 
 Imagen docker: 
 https://hub.docker.com/r/damn21/trinos-api_api
+
+Nota: Se debe descargar antes docker-compose para poder ejecutar la app
