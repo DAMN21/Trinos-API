@@ -1,15 +1,17 @@
+#Descarga la imagen de node en la versión fermium-buster-slim
 FROM node:fermium-buster-slim
 
+#Establece el directorio en el que va estar guardada toda nuestra app
 WORKDIR /usr/src/app
-
+#Puerto
 EXPOSE 3000
-
+#actualiza la imagen e instala lo necesario para la app
 RUN apt update && apt install -y python make g++
-
+#Copia las dependencias dentro del directorio actual
 COPY ./package*.json ./
-
+#Instala los modulos
 RUN npm install
-
+#Copia el directorio actual dentro del contenedor actual
 COPY . .
-
+#Comando para ejecutar la app
 CMD ["npm", "run", "dev"]

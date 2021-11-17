@@ -1,30 +1,40 @@
 version: '3'
-
+#Services es el objeto principal de los contenedores que vamos a crear
+#Si va a crear una aplicación de varios contenedores, se supone que debemos utilizar los servicios
 services:
   api:
     build:
+#El archivo Dockerfile debe existir en el directorio actual. (En la misma carpeta del archivo docker-compose.yml)
       context: .
       dockerfile: Dockerfile.dev
     restart: unless-stopped
+#los "volúmenes" actúan como la clave de la patente y el "nombre del volumen" 
+# y la ruta de montaje actúan como elementos secundarios
     volumes:
       - /usr/src/app/node_modules
       - .:/usr/src/app
+    container_name: mybackend
+#Definimos las variables de entorno
     environment:
       DATABASE_URL: postgres://trinos_user:root_12345@db:5432/trinos
     ports:
       - 3000:3000
+#Crea una relación de interdependencia entre los contenedores, lo que significa que el contenedor 
+#"db" debe crearse primero y la API lo seguirá más adelante
     depends_on:
       - db
-  db:
+  db:           
     image: postgres:13.0-alpine
+    container_name: mibasededatos 
     environment:
       POSTGRES_DB: trinos
       POSTGRES_USER: trinos_user
       POSTGRES_PASSWORD: root_12345
     ports:
-      - 5432:5432
+      - 5432:5432 
     volumes:
       - postgres:/var/lib/postgresql/data
-
+#finalmente, mencionaremos objetos que están fuera de los límites de los servicios o que no son hijos 
+#del campo de servicios, tales objetos son volúmenes y red.
 volumes:
   postgres: ~
